@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Ultimation • Roblox Studio Systems</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0c0e14;
+    --fg: #f2f2f2;
+    --accent: #00f0ff;
+    --glass: rgba(255,255,255,0.04);
+    --glass-border: rgba(255,255,255,0.09);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family:'Inter', sans-serif;
+    background:var(--bg);
+    color:var(--fg);
+    overflow-x:hidden;
+  }
+  body::before {
+    content:""; position:fixed; inset:0; z-index:-1;
+    background:linear-gradient(135deg,#111c2f,#1d2c45,#103548);
+    background-size:300% 300%; animation:bgMove 20s ease infinite;
+  }
+  @keyframes bgMove {0%{background-position:0% 50%}50%{100%50%}100%{0%50%}}
+  nav {
+    position:fixed; top:0; left:0; width:100%;
+    background:rgba(255,255,255,0.02);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--glass-border);
+    padding:14px 5vw;
+    display:flex; justify-content:space-between; align-items:center;
+    z-index:1000;
+  }
+  nav .logo { color:var(--accent); font-weight:800; cursor:default; }
+  nav .links a {
+    margin:0 12px; font-weight:600; color:var(--fg); text-decoration:none;
+    cursor:pointer;
+  }
+  nav .links a:hover { color:var(--accent); }
+  nav .user { color:var(--accent); font-weight:600; }
+  main { padding-top:72px; }
+  section { padding:80px 5vw; min-height:100vh; display:flex; align-items:center; justify-content:center; flex-direction:column; }
+  .glass-box {
+    background:var(--glass); border:1px solid var(--glass-border);
+    backdrop-filter:blur(10px); border-radius:14px;
+    padding:2rem; width:100%; max-width:600px;
+    box-shadow:0 0 20px var(--accent); text-align:center;
+  }
+  h1,h2 { color:var(--accent); margin-bottom:1rem; text-shadow:0 0 8px var(--accent); }
+  p { margin-bottom:1.2rem; }
+  input, button, textarea {
+    width:100%; margin:8px 0; padding:12px 14px;
+    border:none; border-radius:8px; font-size:1rem;
+  }
+  button {
+    background:var(--accent); color:black; font-weight:700;
+    cursor:pointer; border-radius:999px;
+  }
+  button:hover { background:#00c6d6; }
+  textarea {
+    background:#111; color:#0ff; font-family:monospace;
+    height:200px; resize:none; margin-top:12px;
+  }
+  table { width:100%; border-collapse:collapse; }
+  table th,td {
+    border:1px solid var(--glass-border);
+    padding:12px;
+  }
+  table th { background:rgba(0,255,255,0.15); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Ultimation</div>
+  <div class="links" id="navLinks">
+    <a data-target="home">Home</a>
+    <a data-target="dashboard" style="display:none;">Dashboard</a>
+    <a data-target="admin" style="display:none;">Admin Panel</a>
+  </div>
+  <div class="user" id="navUser"></div>
+</nav>
+
+<main>
+  <!-- HOME -->
+  <section id="home">
+    <div class="glass-box">
+      <h1>Ultimation</h1>
+      <p>Roblox infrastructure for elite studios—real-time analytics, webhook tracking, deployments, moderation, and economy tools.</p>
+      <button id="btnLogin">Login / Signup</button>
+      <div style="margin-top:2rem;">
+        <h2>Why Studios Choose Ultimation</h2>
+        <p>• Live tracking & alerts<br>• Easy webhook integration<br>• Secure API per user<br>• One-click Lua script download</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- AUTH -->
+  <section id="auth" style="display:none;">
+    <div class="glass-box">
+      <h2 id="authTitle">Login</h2>
+      <input id="authEmail" type="email" placeholder="Email">
+      <input id="authPass" type="password" placeholder="Password">
+      <button id="authSubmit">Continue</button>
+      <p><span id="authSwitchText">Don't have an account?</span> <a id="authSwitch" style="color:var(--accent);cursor:pointer;">Sign up</a></p>
+    </div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <section id="dashboard" style="display:none;">
+    <div class="glass-box">
+      <h2>Dashboard</h2>
+      <p>Hello, <span id="userEmail"></span>
+        <button id="logoutBtn" style="margin-left:12px;background:transparent;border:1px solid var(--accent);color:var(--accent);padding:8px 14px;border-radius:999px;">Logout</button>
+      </p>
+      <div style="text-align:left;margin-top:1rem;">
+        <strong>Stats:</strong><br>
+        Total logins: <span id="statLogins">0</span><br>
+        Lua files generated: <span id="statLua">0</span>
+      </div>
+      <hr style="margin:1rem 0;">
+      <h3>Webhook Integration</h3>
+      <label>Your Discord Webhook URL</label>
+      <input id="webhookUrl" placeholder="https://discord.com/api/webhooks/…">
+      <button id="generateLuaBtn">Generate + Download Lua</button>
+      <textarea id="luaOutput" readonly></textarea>
+      <hr style="margin:1rem 0;">
+      <div style="text-align:left;">
+        <strong>API Token:</strong><br><span id="apiTokenDisplay" style="font-family:monospace;"></span><br>
+        <button id="regenTokenBtn" style="background:#f55;">Regenerate Token</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ADMIN -->
+  <section id="admin" style="display:none;">
+    <div class="glass-box">
+      <h2>Admin Panel</h2>
+      <table>
+        <thead><tr><th>Email</th><th>Tokens</th><th>Logins</th><th>Lua Files</th><th>Action</th></tr></thead>
+        <tbody id="adminTable"></tbody>
+      </table>
+      <button id="adminLogoutBtn" style="margin-top:1rem;">Logout Admin</button>
+    </div>
+  </section>
+</main>
+
+<script>
+  // Storage Keys
+  const STORAGE_USERS = "ultimation_users";
+  const STORAGE_CURRENT = "ultimation_current";
+  const ADMIN_EMAIL = "admin@ultimation.com";
+  const ADMIN_PASS = "StrongAdminPass123!"; // change immediately
+
+  // Load data
+  const users = JSON.parse(localStorage.getItem(STORAGE_USERS)||"{}");
+  let current = sessionStorage.getItem(STORAGE_CURRENT);
+  let user = current ? users[current] : null;
+
+  // Nav buttons
+  const navLinks = document.querySelectorAll(".links a");
+  const navUser = document.getElementById("navUser");
+
+  function saveUsers(){ localStorage.setItem(STORAGE_USERS, JSON.stringify(users)); }
+
+  // Authenticate
+  let authMode="login";
+  const switchAuth = () => {
+    authMode = authMode==="login"?"signup":"login";
+    document.getElementById("authTitle").innerText = authMode==="login"?"Login":"Sign Up";
+    document.getElementById("authSwitchText").innerText = authMode==="login"?"Don't have an account?":"Already have an account?";
+    document.getElementById("authSwitch").innerText = authMode==="login"?"Sign up":"Login";
+  };
+
+  document.getElementById("btnLogin").onclick = ()=>show("auth");
+  document.getElementById("authSwitch").onclick = switchAuth;
+
+  document.getElementById("authSubmit").onclick = ()=>{
+    const email = document.getElementById("authEmail").value.trim().toLowerCase();
+    const pass = document.getElementById("authPass").value.trim();
+    if (!email.includes("@")||pass.length<6){return alert("Invalid credentials.");}
+    if(authMode==="login"){
+      if(email===ADMIN_EMAIL && pass===ADMIN_PASS){
+        sessionStorage.setItem(STORAGE_CURRENT, email);
+        show("admin"); loadAdmin(); return;
+      }
+      if(!users[email]||users[email].pass!==pass) return alert("Login failed.");
+      sessionStorage.setItem(STORAGE_CURRENT,email);
+      current=email; user=users[current]; user.logins++; saveUsers();
+      show("dashboard"); updateDash();
+    } else {
+      if(users[email]) return alert("Account exists.");
+      users[email]={pass, apiToken:generateToken(), logins:0, luaCount:0, webhook:""};
+      saveUsers();
+      alert("Account created! Please log in.");
+      switchAuth();
+    }
+  };
+
+  function generateToken(){
+    const chars="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    return Array(32).fill().map(()=>chars[Math.floor(Math.random()*chars.length)]).join("");
+  }
+
+  // Show section
+  function show(section){
+    ["home","auth","dashboard","admin"].forEach(s=>{
+      document.getElementById(s).style.display=s===section?"flex":"none";
+    });
+    navLinks.forEach(l=> {
+      const showLink = (l.dataset.target===section) || (l.dataset.target==="home"&&section==="home");
+      l.style.display = showLink? "inline":"none";
+    });
+    navUser.textContent = current?(current===ADMIN_EMAIL?"Admin":" "+current):"";
+    updateNavLinks();
+  }
+
+  navLinks.forEach(l=> l.onclick = () => {
+    if(l.dataset.target==="dashboard" && !user) return show("auth");
+    if(l.dataset.target==="admin" && current!==ADMIN_EMAIL) return;
+    show(l.dataset.target);
+  });
+
+  function updateNavLinks(){
+    navLinks.forEach(l=> {
+      l.style.color = l.dataset.target===document.querySelector("section[style*='display: flex']").id
+        ? "var(--accent)":"var(--fg)";
+    });
+  }
+
+  window.onbeforeunload = () => { sessionStorage.clear(); }; // auto-logout on tab close
+
+  // Dashboard logic
+  const logoutBtn=document.getElementById("logoutBtn");
+  const generateLuaBtn=document.getElementById("generateLuaBtn");
+  const luaOutput=document.getElementById("luaOutput");
+  const webhookInput=document.getElementById("webhookUrl");
+  const apiTokenDisplay=document.getElementById("apiTokenDisplay");
+  const regenTokenBtn=document.getElementById("regenTokenBtn");
+  const statLogins=document.getElementById("statLogins");
+  const statLua=document.getElementById("statLua");
+
+  logoutBtn.onclick=()=>{ sessionStorage.clear(); location.reload(); };
+
+  function updateDash(){
+    document.getElementById("userEmail").innerText = current;
+    statLogins.innerText = user.logins;
+    statLua.innerText = user.luaCount;
+    apiTokenDisplay.innerText = user.apiToken;
+    webhookInput.value = user.webhook || "";
+    luaOutput.value = "";
+  }
+
+  generateLuaBtn.onclick = () => {
+    const webhook = webhookInput.value.trim();
+    if(!webhook) return alert("Enter webhook.");
+    user.webhook = webhook;
+    const token = user.apiToken;
+    const lua = `-- Ultimation Tracker Script\n`+
+`local HttpService = game:GetService("HttpService")\n`+
+`local WEBHOOK_URL = "${webhook}"\n`+
+`local API_TOKEN = "${token}"\n\n`+
+`local function sendData()\n`+
+`  local data = {\n`+
+`    placeId = game.PlaceId,\n`+
+`    username = game.Players.LocalPlayer.Name,\n`+ 
+`    timestamp = os.time(),\n`+
+`    apiToken = API_TOKEN\n`+
+`  }\n`+
+`  HttpService:PostAsync(WEBHOOK_URL, HttpService:JSONEncode(data), Enum.HttpContentType.ApplicationJson)\n`+
+`end\n\n`+
+`game.Players.PlayerAdded:Connect(sendData)\n`;
+    luaOutput.value=lua;
+    user.luaCount = (user.luaCount||0)+1;
+    users[current]=user; saveUsers();
+    statLua.innerText=user.luaCount;
+    const blob=new Blob([lua],{type:"text/plain"});
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(blob);
+    a.download="Ultimation_Tracker.lua";
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a);
+  };
+
+  regenTokenBtn.onclick = () => {
+    if(!confirm("Regenerate your API token?")) return;
+    user.apiToken = generateToken();
+    users[current]=user; saveUsers();
+    apiTokenDisplay.innerText=user.apiToken;
+  };
+
+  // Admin logic
+  const adminTable=document.getElementById("adminTable");
+  document.getElementById("adminLogoutBtn").onclick=()=>{ sessionStorage.clear(); location.reload(); };
+
+  function loadAdmin(){
+    adminTable.innerHTML="";
+    Object.keys(users).forEach(email=>{
+      const u=users[email];
+      const tr=document.createElement("tr");
+      tr.innerHTML=`<td>${email}</td><td>${u.apiToken}</td><td>${u.logins||0}</td><td>${u.luaCount||0}</td>
+        <td><button onclick="regenUserToken('${email}')">Regen Token</button></td>`;
+      adminTable.appendChild(tr);
+    });
+  }
+
+  window.regenUserToken=(email)=>{
+    if(!confirm(`Regen API token for ${email}?`)) return;
+    users[email].apiToken = generateToken();
+    saveUsers(); loadAdmin();
+  };
+
+  // Startup
+  if(current) {
+    if(current===ADMIN_EMAIL) loadAdmin(), show("admin");
+    else { user=users[current]; user.logins=(user.logins||0)+1; saveUsers(); show("dashboard"); updateDash(); }
+  } else show("home");
+</script>
+
+</body>
+</html>
