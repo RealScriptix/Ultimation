@@ -1,238 +1,614 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Ultimation</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #0c0e14;
-      --fg: #f2f2f2;
-      --accent: #00f0ff;
-      --glass: rgba(255,255,255,0.04);
-      --glass-border: rgba(255,255,255,0.09);
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--fg);
-      overflow-x: hidden;
-    }
-    nav {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      padding: 16px 5vw;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(255,255,255,0.02);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--glass-border);
-      z-index: 1000;
-    }
-    nav .logo {
-      color: var(--accent);
-      font-size: 1.2rem;
-      font-weight: 800;
-    }
-    nav .links a {
-      margin: 0 12px;
-      color: var(--fg);
-      text-decoration: none;
-      font-weight: 600;
-    }
-    nav .links a:hover {
-      color: var(--accent);
-    }
-    .section {
-      padding: 100px 5vw;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-    }
-    .glass-box {
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-      backdrop-filter: blur(10px);
-      border-radius: 14px;
-      padding: 2rem;
-      width: 100%;
-      max-width: 500px;
-      box-shadow: 0 0 20px var(--accent);
-    }
-    input {
-      width: 100%;
-      margin: 8px 0;
-      padding: 10px;
-      border-radius: 8px;
-      border: none;
-    }
-    button {
-      padding: 10px 20px;
-      background: var(--accent);
-      color: black;
-      border: none;
-      border-radius: 999px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    #lua {
-      width: 100%;
-      height: 200px;
-      margin-top: 15px;
-      border-radius: 8px;
-      padding: 12px;
-      background: #111;
-      color: #00ffff;
-      font-family: monospace;
-      border: 1px solid var(--glass-border);
-    }
-    #auth { display: none; }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ultimation • Roblox Game Systems Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0c0e14;
+    --fg: #f2f2f2;
+    --accent: #00f0ff;
+    --glass: rgba(255,255,255,0.04);
+    --glass-border: rgba(255,255,255,0.09);
+  }
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+  }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(135deg, #111c2f, #1d2c45, #103548);
+    background-size: 300% 300%;
+    animation: bgMove 20s ease infinite;
+  }
+  @keyframes bgMove {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+  }
+  nav {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    background: rgba(255,255,255,0.02);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--glass-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 5vw;
+    z-index: 1000;
+  }
+  nav .logo {
+    color: var(--accent);
+    font-weight: 800;
+    font-size: 1.3rem;
+    cursor: default;
+  }
+  nav .links a {
+    color: var(--fg);
+    text-decoration: none;
+    margin: 0 12px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  nav .links a:hover {
+    color: var(--accent);
+  }
+  nav .user {
+    color: var(--accent);
+    font-weight: 600;
+  }
+  main {
+    padding-top: 72px;
+  }
+  section {
+    min-height: 100vh;
+    padding: 80px 5vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .glass-box {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+    border-radius: 14px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 540px;
+    box-shadow: 0 0 20px var(--accent);
+    color: var(--fg);
+  }
+  h1, h2 {
+    color: var(--accent);
+    text-shadow: 0 0 8px var(--accent);
+    margin-bottom: 1rem;
+  }
+  input, select {
+    width: 100%;
+    margin: 8px 0 16px 0;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+  }
+  button {
+    padding: 12px 24px;
+    background: var(--accent);
+    color: black;
+    font-weight: 700;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: #00c6d6;
+  }
+  textarea {
+    width: 100%;
+    height: 250px;
+    margin-top: 12px;
+    background: #111;
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    padding: 12px;
+    color: #00ffff;
+    font-family: monospace;
+    resize: none;
+  }
+  a.link {
+    color: var(--accent);
+    cursor: pointer;
+    font-weight: 600;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+  }
+  table th, table td {
+    padding: 12px;
+    border: 1px solid var(--glass-border);
+    text-align: left;
+  }
+  table th {
+    background: rgba(0, 255, 255, 0.15);
+  }
+  #adminPanel {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  #logoutBtn {
+    margin-left: 12px;
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-weight: 600;
+  }
+  #logoutBtn:hover {
+    background: var(--accent);
+    color: black;
+  }
+</style>
 </head>
 <body>
 
 <nav>
   <div class="logo">Ultimation</div>
-  <div class="links">
-    <a href="#home">Home</a>
-    <a href="#dashboard">Dashboard</a>
+  <div class="links" id="navLinks">
+    <a data-target="home">Home</a>
+    <a data-target="dashboard" style="display:none;">Dashboard</a>
+    <a data-target="admin" style="display:none;">Admin Panel</a>
   </div>
-  <div id="navUser"></div>
+  <div class="user" id="navUser"></div>
 </nav>
 
-<div class="section" id="auth">
-  <div class="glass-box">
-    <h2 id="authTitle">Login</h2>
-    <input id="authEmail" placeholder="Email">
-    <input id="authPass" type="password" placeholder="Password">
-    <button onclick="handleAuth()">Continue</button>
-    <p id="authSwitch" style="margin-top: 12px;">Don't have an account? <a href="#" onclick="toggleAuth()">Sign up</a></p>
-  </div>
-</div>
+<main>
+  <!-- HOME -->
+  <section id="home" class="section">
+    <div class="glass-box">
+      <h1>Welcome to Ultimation</h1>
+      <p>Roblox infrastructure tools for high-end studios.<br />Secure, scalable, and simple.</p>
+      <button id="btnLoginShow">Login / Signup</button>
+    </div>
+  </section>
 
-<div class="section" id="home">
-  <div class="glass-box">
-    <h1>Welcome to Ultimation</h1>
-    <p>Roblox infrastructure tools for high-end studios. Secure, scalable, and simple.</p>
-  </div>
-</div>
+  <!-- AUTH -->
+  <section id="auth" class="section" style="display:none;">
+    <div class="glass-box">
+      <h2 id="authTitle">Login</h2>
+      <input id="authEmail" type="email" placeholder="Email" autocomplete="username" />
+      <input id="authPass" type="password" placeholder="Password" autocomplete="current-password" />
+      <button id="authSubmit">Continue</button>
+      <p style="margin-top: 14px; text-align: center;">
+        <span id="authSwitchText">Don't have an account?</span> <a id="authSwitch" class="link">Sign up</a>
+      </p>
+      <p style="text-align:center; margin-top: 10px; font-size: 0.85rem; color:#ccc;">
+        Or login with Roblox:
+      </p>
+      <button id="robloxLogin" style="width:100%; background:#3c82f6; color:white; margin-top:8px;">Mock Roblox Login</button>
+    </div>
+  </section>
 
-<div class="section" id="dashboard" style="display:none;">
-  <div class="glass-box">
-    <h2>Your Game Tracker</h2>
-    <input id="username" placeholder="Roblox Username">
-    <input id="place" placeholder="Game Name / Place Name">
-    <input id="webhook" placeholder="Discord Webhook URL">
-    <button onclick="generateLua()">Generate Lua</button>
-    <textarea id="lua" readonly></textarea>
-  </div>
-</div>
+  <!-- DASHBOARD -->
+  <section id="dashboard" class="section" style="display:none;">
+    <div class="glass-box">
+      <h2>Dashboard</h2>
+      <p>Hello, <span id="userEmail"></span> <button id="logoutBtn">Logout</button></p>
+      <label for="robloxUser">Roblox Username</label>
+      <input id="robloxUser" placeholder="Enter your Roblox username" />
+      <label for="gamePlace">Game Place Name</label>
+      <input id="gamePlace" placeholder="Enter your game/place name" />
+      <label for="webhookUrl">Discord Webhook URL</label>
+      <input id="webhookUrl" placeholder="Enter webhook URL" />
+      <button id="generateLuaBtn">Generate Lua Script</button>
+      <button id="downloadLuaBtn" style="margin-top:8px; display:none;">Download Lua Script</button>
+      <textarea id="luaOutput" readonly placeholder="Your generated Lua script will appear here..."></textarea>
+      <hr style="margin: 2rem 0; border: 1px solid var(--glass-border);" />
+      <h3>API Token</h3>
+      <p id="apiTokenDisplay" style="font-family: monospace; user-select: all;"></p>
+      <button id="regenTokenBtn" style="background:#f55;">Regenerate API Token</button>
+    </div>
+  </section>
+
+  <!-- ADMIN -->
+  <section id="admin" class="section" style="display:none;">
+    <div class="glass-box">
+      <h2>Admin Panel</h2>
+      <p>Manage all user accounts (passwords are hidden for security)</p>
+      <div id="adminPanel">
+        <table>
+          <thead>
+            <tr><th>Email</th><th>API Token</th><th>Actions</th></tr>
+          </thead>
+          <tbody id="adminTableBody"></tbody>
+        </table>
+      </div>
+      <button id="adminLogoutBtn" style="margin-top:1rem;">Logout Admin</button>
+    </div>
+  </section>
+</main>
 
 <script>
-let mode = "login"; // or "signup"
-let users = JSON.parse(localStorage.getItem("ult_users") || "{}");
-let current = localStorage.getItem("ult_current");
+  // === Utils ===
+  const STORAGE_KEY = "ultimation_users";
+  const STORAGE_CURRENT = "ultimation_current";
+  const ADMIN_EMAIL = "admin@ultimation.com"; // hardcoded admin email for demo (change if you want)
+  const ADMIN_PASS = "admin123"; // hardcoded admin pass
 
-function saveUsers() {
-  localStorage.setItem("ult_users", JSON.stringify(users));
-}
-function login(email, pass) {
-  if (!users[email] || users[email].pass !== pass) return false;
-  localStorage.setItem("ult_current", email);
-  return true;
-}
-function signup(email, pass) {
-  if (users[email]) return false;
-  const apiToken = generateToken();
-  users[email] = { pass, apiToken };
-  saveUsers();
-  return true;
-}
-function toggleAuth() {
-  if (mode === "login") {
-    mode = "signup";
-    document.getElementById("authTitle").innerText = "Sign Up";
-    document.getElementById("authSwitch").innerHTML = 'Already have an account? <a href="#" onclick="toggleAuth()">Login</a>';
-  } else {
-    mode = "login";
-    document.getElementById("authTitle").innerText = "Login";
-    document.getElementById("authSwitch").innerHTML = 'Don\'t have an account? <a href="#" onclick="toggleAuth()">Sign up</a>';
+  // Load users from localStorage
+  let users = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+  let currentUserEmail = localStorage.getItem(STORAGE_CURRENT);
+  let currentUser = currentUserEmail ? users[currentUserEmail] : null;
+
+  // Navigation elements
+  const navLinks = document.querySelectorAll("nav .links a");
+  const navUser = document.getElementById("navUser");
+  const sections = {
+    home: document.getElementById("home"),
+    auth: document.getElementById("auth"),
+    dashboard: document.getElementById("dashboard"),
+    admin: document.getElementById("admin"),
+  };
+
+  // Show/hide sections
+  function showSection(name) {
+    for (const sec in sections) {
+      sections[sec].style.display = sec === name ? "flex" : "none";
+    }
+    // Highlight nav links accordingly
+    navLinks.forEach(link => {
+      link.style.color = link.dataset.target === name ? "var(--accent)" : "var(--fg)";
+    });
   }
-}
-function handleAuth() {
-  const email = document.getElementById("authEmail").value.trim();
-  const pass = document.getElementById("authPass").value.trim();
-  if (!email.includes("@") || pass.length < 4) return alert("Invalid credentials");
 
-  if (mode === "signup") {
-    if (!signup(email, pass)) return alert("Account already exists");
-    toggleAuth(); // redirect to login
-    alert("Account created. Now login.");
-  } else {
-    if (!login(email, pass)) return alert("Login failed");
-    document.getElementById("auth").style.display = "none";
-    document.getElementById("dashboard").style.display = "flex";
-    document.getElementById("navUser").innerText = email;
+  // Save users to localStorage
+  function saveUsers() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
   }
-}
-function generateToken(len = 32) {
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  return Array(len).fill(0).map(() => chars[Math.floor(Math.random()*chars.length)]).join('');
-}
-function generateLua() {
-  const uname = document.getElementById("username").value.trim();
-  const place = document.getElementById("place").value.trim();
-  const webhook = document.getElementById("webhook").value.trim();
-  const email = localStorage.getItem("ult_current");
-  if (!uname || !place || !webhook || !email) return alert("Missing fields");
 
-  const token = users[email].apiToken;
-  const lua = `-- Ultimation Tracker
+  // Generate API Token (32 chars alphanumeric)
+  function generateToken() {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let token = "";
+    for (let i = 0; i < 32; i++) {
+      token += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return token;
+  }
+
+  // Validate email format (simple)
+  function validateEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  // === AUTH LOGIC ===
+  let authMode = "login"; // or "signup"
+
+  const authTitle = document.getElementById("authTitle");
+  const authSwitch = document.getElementById("authSwitch");
+  const authSwitchText = document.getElementById("authSwitchText");
+  const authEmailInput = document.getElementById("authEmail");
+  const authPassInput = document.getElementById("authPass");
+  const authSubmitBtn = document.getElementById("authSubmit");
+  const btnLoginShow = document.getElementById("btnLoginShow");
+  const robloxLoginBtn = document.getElementById("robloxLogin");
+
+  function updateAuthUI() {
+    if (authMode === "login") {
+      authTitle.textContent = "Login";
+      authSwitchText.textContent = "Don't have an account?";
+      authSwitch.textContent = "Sign up";
+    } else {
+      authTitle.textContent = "Sign Up";
+      authSwitchText.textContent = "Already have an account?";
+      authSwitch.textContent = "Login";
+    }
+    authEmailInput.value = "";
+    authPassInput.value = "";
+  }
+
+  function login(email, password) {
+    if (!users[email]) return false;
+    if (users[email].pass !== password) return false;
+    return true;
+  }
+
+  function signup(email, password) {
+    if (users[email]) return false;
+    users[email] = {
+      pass: password,
+      apiToken: generateToken(),
+      robloxUsername: "",
+      gamePlace: "",
+      webhook: "",
+    };
+    saveUsers();
+    return true;
+  }
+
+  authSwitch.addEventListener("click", () => {
+    authMode = authMode === "login" ? "signup" : "login";
+    updateAuthUI();
+  });
+
+  authSubmitBtn.addEventListener("click", () => {
+    const email = authEmailInput.value.trim().toLowerCase();
+    const pass = authPassInput.value.trim();
+    if (!validateEmail(email)) return alert("Please enter a valid email.");
+    if (pass.length < 6) return alert("Password must be at least 6 characters.");
+    if (authMode === "login") {
+      if (!login(email, pass)) return alert("Invalid email or password.");
+      if (email === ADMIN_EMAIL) {
+        currentUserEmail = email;
+        localStorage.setItem(STORAGE_CURRENT, email);
+        showAdminPanel();
+      } else {
+        currentUserEmail = email;
+        localStorage.setItem(STORAGE_CURRENT, email);
+        currentUser = users[email];
+        showDashboard();
+      }
+    } else {
+      if (!signup(email, pass)) return alert("Account already exists.");
+      alert("Account created! Please login.");
+      authMode = "login";
+      updateAuthUI();
+    }
+  });
+
+  // Mock Roblox OAuth login (simply prompt username, simulate success)
+  robloxLoginBtn.addEventListener("click", () => {
+    let username = prompt("Enter your Roblox username to login (mock):");
+    if (!username || username.trim().length < 3) {
+      alert("Invalid Roblox username.");
+      return;
+    }
+    username = username.trim();
+    // Generate dummy email based on username to simulate user
+    const email = username.toLowerCase() + "@roblox.mock";
+    if (!users[email]) {
+      users[email] = {
+        pass: "robloxoauth", // dummy pass
+        apiToken: generateToken(),
+        robloxUsername: username,
+        gamePlace: "",
+        webhook: "",
+      };
+      saveUsers();
+    }
+    currentUserEmail = email;
+    localStorage.setItem(STORAGE_CURRENT, email);
+    currentUser = users[email];
+    showDashboard();
+  });
+
+  btnLoginShow.addEventListener("click", () => {
+    showSection("auth");
+  });
+
+  // === NAVIGATION ===
+  navLinks.forEach(link => {
+    link.addEventListener("click", () => {
+      if (link.dataset.target === "dashboard" && !currentUserEmail) {
+        alert("Please login first.");
+        showSection("auth");
+        return;
+      }
+      if (link.dataset.target === "admin" && currentUserEmail !== ADMIN_EMAIL) {
+        alert("Access denied.");
+        return;
+      }
+      showSection(link.dataset.target);
+    });
+  });
+
+  // === DASHBOARD LOGIC ===
+  const userEmailDisplay = document.getElementById("userEmail");
+  const robloxUserInput = document.getElementById("robloxUser");
+  const gamePlaceInput = document.getElementById("gamePlace");
+  const webhookInput = document.getElementById("webhookUrl");
+  const generateLuaBtn = document.getElementById("generateLuaBtn");
+  const luaOutput = document.getElementById("luaOutput");
+  const apiTokenDisplay = document.getElementById("apiTokenDisplay");
+  const regenTokenBtn = document.getElementById("regenTokenBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+  const downloadLuaBtn = document.getElementById("downloadLuaBtn");
+
+  function showDashboard() {
+    showSection("dashboard");
+    userEmailDisplay.textContent = currentUserEmail;
+    navLinks.forEach(l => {
+      if (l.dataset.target === "dashboard") l.style.display = "inline";
+      if (l.dataset.target === "admin" && currentUserEmail === ADMIN_EMAIL) l.style.display = "inline";
+    });
+    navUser.textContent = currentUserEmail + (currentUserEmail === ADMIN_EMAIL ? " (Admin)" : "");
+    // Load saved data if any
+    if (currentUser.robloxUsername) robloxUserInput.value = currentUser.robloxUsername;
+    if (currentUser.gamePlace) gamePlaceInput.value = currentUser.gamePlace;
+    if (currentUser.webhook) webhookInput.value = currentUser.webhook;
+    apiTokenDisplay.textContent = currentUser.apiToken;
+    luaOutput.value = "";
+    downloadLuaBtn.style.display = "none";
+  }
+
+  function generateLuaScript() {
+    const robloxUser = robloxUserInput.value.trim();
+    const gamePlace = gamePlaceInput.value.trim();
+    const webhook = webhookInput.value.trim();
+    if (!robloxUser || !gamePlace || !webhook) {
+      alert("Please fill in all fields before generating the Lua script.");
+      return;
+    }
+    // Save the data
+    currentUser.robloxUsername = robloxUser;
+    currentUser.gamePlace = gamePlace;
+    currentUser.webhook = webhook;
+    users[currentUserEmail] = currentUser;
+    saveUsers();
+
+    // Generate Lua script
+    const lua = `-- Ultimation Tracker Script
 local HttpService = game:GetService("HttpService")
 
 local WEBHOOK_URL = "${webhook}"
-local API_TOKEN = "${token}"
+local API_TOKEN = "${currentUser.apiToken}"
 
 local function sendData()
   local data = {
     token = API_TOKEN,
-    place = "${place}",
-    user = "${uname}",
-    playerCount = #game.Players:GetPlayers(),
-    time = os.time()
+    place = "${gamePlace}",
+    user = "${robloxUser}",
+    timestamp = os.time()
   }
-  local ok, err = pcall(function()
-    HttpService:PostAsync(WEBHOOK_URL, HttpService:JSONEncode(data))
+  local json = HttpService:JSONEncode(data)
+  local success, err = pcall(function()
+    HttpService:PostAsync(WEBHOOK_URL, json, Enum.HttpContentType.ApplicationJson)
   end)
-  if not ok then warn("Ultimation Error:", err) end
+  if not success then
+    warn("Failed to send Ultimation data: "..tostring(err))
+  end
 end
 
-game.Players.PlayerAdded:Connect(function()
-  wait(2)
+game.Players.PlayerAdded:Connect(function(player)
   sendData()
 end)
+`;
 
-while true do
-  wait(60)
-  sendData()
-end`;
+    luaOutput.value = lua;
+    downloadLuaBtn.style.display = "inline-block";
+  }
 
-  document.getElementById("lua").value = lua;
-}
+  generateLuaBtn.addEventListener("click", generateLuaScript);
 
-if (current && users[current]) {
-  document.getElementById("auth").style.display = "none";
-  document.getElementById("dashboard").style.display = "flex";
-  document.getElementById("navUser").innerText = current;
-} else {
-  document.getElementById("auth").style.display = "flex";
-}
+  downloadLuaBtn.addEventListener("click", () => {
+    const blob = new Blob([luaOutput.value], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "Ultimation_Tracker.lua";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+
+  regenTokenBtn.addEventListener("click", () => {
+    if (!confirm("Regenerating your API token will invalidate the old one. Continue?")) return;
+    currentUser.apiToken = generateToken();
+    users[currentUserEmail] = currentUser;
+    saveUsers();
+    apiTokenDisplay.textContent = currentUser.apiToken;
+    alert("API token regenerated.");
+  });
+
+  logoutBtn.addEventListener("click", () => {
+    currentUserEmail = null;
+    currentUser = null;
+    localStorage.removeItem(STORAGE_CURRENT);
+    navLinks.forEach(l => {
+      if (l.dataset.target === "dashboard" || l.dataset.target === "admin") l.style.display = "none";
+    });
+    navUser.textContent = "";
+    showSection("home");
+  });
+
+  // === ADMIN PANEL ===
+  const adminPanelBody = document.getElementById("adminTableBody");
+  const adminLogoutBtn = document.getElementById("adminLogoutBtn");
+
+  function showAdminPanel() {
+    showSection("admin");
+    navLinks.forEach(l => {
+      if (l.dataset.target === "dashboard") l.style.display = "inline";
+      if (l.dataset.target === "admin") l.style.display = "inline";
+    });
+    navUser.textContent = currentUserEmail + " (Admin)";
+    renderAdminTable();
+  }
+
+  function renderAdminTable() {
+    adminPanelBody.innerHTML = "";
+    for (const email in users) {
+      const user = users[email];
+      const tr = document.createElement("tr");
+      const emailTd = document.createElement("td");
+      emailTd.textContent = email;
+      const tokenTd = document.createElement("td");
+      tokenTd.textContent = user.apiToken;
+      const actionTd = document.createElement("td");
+      const regenBtn = document.createElement("button");
+      regenBtn.textContent = "Regenerate Token";
+      regenBtn.style.background = "#f55";
+      regenBtn.style.color = "white";
+      regenBtn.style.border = "none";
+      regenBtn.style.padding = "6px 12px";
+      regenBtn.style.borderRadius = "999px";
+      regenBtn.style.cursor = "pointer";
+      regenBtn.addEventListener("click", () => {
+        if (confirm(`Regenerate API token for ${email}?`)) {
+          user.apiToken = generateToken();
+          users[email] = user;
+          saveUsers();
+          renderAdminTable();
+          alert(`API token for ${email} regenerated.`);
+        }
+      });
+      actionTd.appendChild(regenBtn);
+
+      tr.appendChild(emailTd);
+      tr.appendChild(tokenTd);
+      tr.appendChild(actionTd);
+      adminPanelBody.appendChild(tr);
+    }
+  }
+
+  adminLogoutBtn.addEventListener("click", () => {
+    currentUserEmail = null;
+    currentUser = null;
+    localStorage.removeItem(STORAGE_CURRENT);
+    navLinks.forEach(l => {
+      if (l.dataset.target === "dashboard" || l.dataset.target === "admin") l.style.display = "none";
+    });
+    navUser.textContent = "";
+    showSection("home");
+  });
+
+  // === Initialization ===
+  function init() {
+    // Show dashboard if logged in
+    if (currentUserEmail) {
+      if (currentUserEmail === ADMIN_EMAIL) {
+        showAdminPanel();
+      } else {
+        currentUser = users[currentUserEmail];
+        showDashboard();
+      }
+    } else {
+      showSection("home");
+      navLinks.forEach(l => {
+        if (l.dataset.target === "dashboard" || l.dataset.target === "admin") l.style.display = "none";
+      });
+    }
+  }
+
+  init();
 </script>
 
 </body>
