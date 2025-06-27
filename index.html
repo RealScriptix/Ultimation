@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ultimation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0c0e14;
+      --fg: #f2f2f2;
+      --accent: #00f0ff;
+      --glass: rgba(255,255,255,0.04);
+      --glass-border: rgba(255,255,255,0.09);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      overflow-x: hidden;
+    }
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      padding: 16px 5vw;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255,255,255,0.02);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--glass-border);
+      z-index: 1000;
+    }
+    nav .logo {
+      color: var(--accent);
+      font-size: 1.2rem;
+      font-weight: 800;
+    }
+    nav .links a {
+      margin: 0 12px;
+      color: var(--fg);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    nav .links a:hover {
+      color: var(--accent);
+    }
+    .section {
+      padding: 100px 5vw;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    .glass-box {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(10px);
+      border-radius: 14px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 0 20px var(--accent);
+    }
+    input {
+      width: 100%;
+      margin: 8px 0;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+    }
+    button {
+      padding: 10px 20px;
+      background: var(--accent);
+      color: black;
+      border: none;
+      border-radius: 999px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    #lua {
+      width: 100%;
+      height: 200px;
+      margin-top: 15px;
+      border-radius: 8px;
+      padding: 12px;
+      background: #111;
+      color: #00ffff;
+      font-family: monospace;
+      border: 1px solid var(--glass-border);
+    }
+    #auth { display: none; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Ultimation</div>
+  <div class="links">
+    <a href="#home">Home</a>
+    <a href="#dashboard">Dashboard</a>
+  </div>
+  <div id="navUser"></div>
+</nav>
+
+<div class="section" id="auth">
+  <div class="glass-box">
+    <h2 id="authTitle">Login</h2>
+    <input id="authEmail" placeholder="Email">
+    <input id="authPass" type="password" placeholder="Password">
+    <button onclick="handleAuth()">Continue</button>
+    <p id="authSwitch" style="margin-top: 12px;">Don't have an account? <a href="#" onclick="toggleAuth()">Sign up</a></p>
+  </div>
+</div>
+
+<div class="section" id="home">
+  <div class="glass-box">
+    <h1>Welcome to Ultimation</h1>
+    <p>Roblox infrastructure tools for high-end studios. Secure, scalable, and simple.</p>
+  </div>
+</div>
+
+<div class="section" id="dashboard" style="display:none;">
+  <div class="glass-box">
+    <h2>Your Game Tracker</h2>
+    <input id="username" placeholder="Roblox Username">
+    <input id="place" placeholder="Game Name / Place Name">
+    <input id="webhook" placeholder="Discord Webhook URL">
+    <button onclick="generateLua()">Generate Lua</button>
+    <textarea id="lua" readonly></textarea>
+  </div>
+</div>
+
+<script>
+let mode = "login"; // or "signup"
+let users = JSON.parse(localStorage.getItem("ult_users") || "{}");
+let current = localStorage.getItem("ult_current");
+
+function saveUsers() {
+  localStorage.setItem("ult_users", JSON.stringify(users));
+}
+function login(email, pass) {
+  if (!users[email] || users[email].pass !== pass) return false;
+  localStorage.setItem("ult_current", email);
+  return true;
+}
+function signup(email, pass) {
+  if (users[email]) return false;
+  const apiToken = generateToken();
+  users[email] = { pass, apiToken };
+  saveUsers();
+  return true;
+}
+function toggleAuth() {
+  if (mode === "login") {
+    mode = "signup";
+    document.getElementById("authTitle").innerText = "Sign Up";
+    document.getElementById("authSwitch").innerHTML = 'Already have an account? <a href="#" onclick="toggleAuth()">Login</a>';
+  } else {
+    mode = "login";
+    document.getElementById("authTitle").innerText = "Login";
+    document.getElementById("authSwitch").innerHTML = 'Don\'t have an account? <a href="#" onclick="toggleAuth()">Sign up</a>';
+  }
+}
+function handleAuth() {
+  const email = document.getElementById("authEmail").value.trim();
+  const pass = document.getElementById("authPass").value.trim();
+  if (!email.includes("@") || pass.length < 4) return alert("Invalid credentials");
+
+  if (mode === "signup") {
+    if (!signup(email, pass)) return alert("Account already exists");
+    toggleAuth(); // redirect to login
+    alert("Account created. Now login.");
+  } else {
+    if (!login(email, pass)) return alert("Login failed");
+    document.getElementById("auth").style.display = "none";
+    document.getElementById("dashboard").style.display = "flex";
+    document.getElementById("navUser").innerText = email;
+  }
+}
+function generateToken(len = 32) {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  return Array(len).fill(0).map(() => chars[Math.floor(Math.random()*chars.length)]).join('');
+}
+function generateLua() {
+  const uname = document.getElementById("username").value.trim();
+  const place = document.getElementById("place").value.trim();
+  const webhook = document.getElementById("webhook").value.trim();
+  const email = localStorage.getItem("ult_current");
+  if (!uname || !place || !webhook || !email) return alert("Missing fields");
+
+  const token = users[email].apiToken;
+  const lua = `-- Ultimation Tracker
+local HttpService = game:GetService("HttpService")
+
+local WEBHOOK_URL = "${webhook}"
+local API_TOKEN = "${token}"
+
+local function sendData()
+  local data = {
+    token = API_TOKEN,
+    place = "${place}",
+    user = "${uname}",
+    playerCount = #game.Players:GetPlayers(),
+    time = os.time()
+  }
+  local ok, err = pcall(function()
+    HttpService:PostAsync(WEBHOOK_URL, HttpService:JSONEncode(data))
+  end)
+  if not ok then warn("Ultimation Error:", err) end
+end
+
+game.Players.PlayerAdded:Connect(function()
+  wait(2)
+  sendData()
+end)
+
+while true do
+  wait(60)
+  sendData()
+end`;
+
+  document.getElementById("lua").value = lua;
+}
+
+if (current && users[current]) {
+  document.getElementById("auth").style.display = "none";
+  document.getElementById("dashboard").style.display = "flex";
+  document.getElementById("navUser").innerText = current;
+} else {
+  document.getElementById("auth").style.display = "flex";
+}
+</script>
+
+</body>
+</html>
