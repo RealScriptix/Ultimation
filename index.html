@@ -1,908 +1,1126 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Ultimation • Roblox Studio Systems</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Roboto+Mono&family=Montserrat&display=swap" rel="stylesheet"/>
-  <style>
-    :root {
-      --bg-light: #f2f7ff;
-      --fg-light: #1a1a1a;
-      --bg-dark: #0c0e14;
-      --fg-dark: #f2f2f2;
-      --accent-default: #00f0ff;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Fins - Short Video Sharing</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌊</text></svg>">
+    
+    <!-- Preload fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#ff0066">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Fins">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-      --bg: var(--bg-dark);
-      --fg: var(--fg-dark);
-      --accent: var(--accent-default);
-      --glass: rgba(255,255,255,0.04);
-      --glass-border: rgba(255,255,255,0.09);
-      --font-main: 'Inter', sans-serif;
-    }
-    html, body {
-      margin:0; padding:0;
-      font-family: var(--font-main);
-      background: var(--bg);
-      color: var(--fg);
-      min-height: 100vh;
-      overflow-x: hidden;
-      transition: background 0.4s ease, color 0.4s ease;
-    }
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      background: linear-gradient(135deg,#111c2f,#1d2c45,#103548);
-      background-size: 300% 300%;
-      animation: bgMove 20s ease infinite;
-      transition: background 0.4s ease;
-    }
-    @keyframes bgMove {
-      0% {background-position: 0 50%;}
-      50% {background-position: 100% 50%;}
-      100% {background-position: 0 50%;}
-    }
-    nav {
-      position: fixed;
-      top: 0; left: 0; width: 100%;
-      padding: 14px 5vw;
-      background: rgba(255,255,255,0.02);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--glass-border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 1000;
-      box-shadow: 0 2px 10px rgba(0,255,255,0.05);
-      transition: background 0.4s ease;
-    }
-    nav .logo {
-      color: var(--accent);
-      font-weight: 800;
-      font-size: 1.3rem;
-      user-select: none;
-      cursor: default;
-    }
-    nav .links a {
-      margin: 0 12px;
-      font-weight: 600;
-      color: var(--fg);
-      text-decoration: none;
-      cursor: pointer;
-      transition: color 0.2s;
-    }
-    nav .links a:hover {
-      color: var(--accent);
-    }
-    nav .user {
-      color: var(--accent);
-      font-weight: 600;
-      user-select: none;
-    }
-    main {
-      padding-top: 72px;
-    }
-    section {
-      min-height: 100vh;
-      padding: 80px 5vw;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      transition: color 0.4s ease;
-    }
-    .glass-box {
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-      backdrop-filter: blur(10px);
-      border-radius: 14px;
-      padding: 2rem;
-      width: 100%;
-      max-width: 720px;
-      box-shadow: 0 0 20px var(--accent);
-      text-align: center;
-      transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
-    }
-    h1, h2, h3 {
-      color: var(--accent);
-      margin-bottom: 1rem;
-      text-shadow: 0 0 8px var(--accent);
-      user-select: none;
-    }
-    p, ul, label {
-      margin-bottom: 1.2rem;
-      color: var(--fg);
-      text-align: left;
-    }
-    ul {
-      list-style: disc;
-      padding-left: 1.2rem;
-    }
-    input, button, textarea, select {
-      width: 100%;
-      margin: 8px 0;
-      padding: 12px 14px;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      transition: background-color 0.3s ease;
-    }
-    input, select, textarea {
-      background: rgba(0, 255, 255, 0.07);
-      color: var(--fg);
-      font-family: monospace;
-    }
-    input::placeholder {
-      color: #00ffff88;
-    }
-    button {
-      background: var(--accent);
-      color: black;
-      font-weight: 700;
-      cursor: pointer;
-      border-radius: 999px;
-      transition: background-color 0.3s ease;
-    }
-    button:hover {
-      background: #00c6d6;
-    }
-    textarea {
-      height: 200px;
-      resize: none;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-      color: var(--fg);
-    }
-    th, td {
-      border: 1px solid var(--glass-border);
-      padding: 12px;
-      text-align: left;
-      font-family: monospace;
-      font-size: 0.9rem;
-    }
-    th {
-      background: rgba(0, 255, 255, 0.15);
-      user-select: none;
-    }
-    /* Settings panel */
-    #settingsPanel {
-      position: fixed;
-      top: 72px;
-      right: 5vw;
-      width: 280px;
-      background: var(--glass);
-      border-radius: 14px;
-      border: 1px solid var(--glass-border);
-      backdrop-filter: blur(12px);
-      padding: 1rem;
-      box-shadow: 0 0 25px var(--accent);
-      z-index: 1500;
-      display: none;
-      user-select: none;
-    }
-    #settingsPanel label {
-      display: block;
-      margin: 12px 0 6px;
-      font-weight: 600;
-    }
-    #settingsBtn {
-      cursor: pointer;
-      padding: 6px 14px;
-      border-radius: 999px;
-      border: 1px solid var(--accent);
-      background: transparent;
-      color: var(--accent);
-      font-weight: 600;
-      transition: background 0.3s ease;
-    }
-    #settingsBtn:hover {
-      background: var(--accent);
-      color: black;
-    }
-    /* Chart container */
-    #statsChart {
-      margin-top: 1rem;
-      max-width: 700px;
-      width: 100%;
-    }
-  </style>
+        :root {
+            --primary: #ff0066;
+            --primary-dark: #e60059;
+            --secondary: #00d4ff;
+            --background: #000;
+            --surface: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --text-muted: #999999;
+            --border: #333333;
+            --success: #00ff88;
+            --warning: #ffaa00;
+            --error: #ff4444;
+            --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.4);
+            --border-radius: 12px;
+            --border-radius-lg: 20px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* App Container */
+        .app {
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Video Container */
+        .video-container {
+            position: relative;
+            height: 100vh;
+            width: 100vw;
+            background: var(--background);
+            cursor: grab;
+            user-select: none;
+            overflow: hidden;
+        }
+
+        .video-container:active {
+            cursor: grabbing;
+        }
+
+        /* Video Element */
+        .video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: #111;
+            transition: var(--transition);
+        }
+
+        /* Video Overlay */
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(0,0,0,0.2) 0%,
+                transparent 20%,
+                transparent 70%,
+                rgba(0,0,0,0.8) 100%
+            );
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* User Info */
+        .user-info {
+            position: absolute;
+            bottom: 120px;
+            left: 20px;
+            right: 80px;
+            z-index: 10;
+            pointer-events: all;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+            border-color: var(--primary);
+        }
+
+        .username {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .username:hover {
+            color: var(--primary);
+        }
+
+        .video-description {
+            font-size: 14px;
+            line-height: 1.4;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .hashtags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .hashtag {
+            color: var(--secondary);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .hashtag:hover {
+            color: var(--primary);
+        }
+
+        /* Action Buttons */
+        .actions {
+            position: absolute;
+            right: 20px;
+            bottom: 120px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 10;
+        }
+
+        .action-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-primary);
+            font-size: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .action-btn.active {
+            background: var(--gradient);
+            color: white;
+            box-shadow: var(--shadow);
+        }
+
+        .action-btn .count {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.2);
+            z-index: 10;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient);
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent);
+            z-index: 10;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .search-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Swipe Indicators */
+        .swipe-indicator {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 15;
+        }
+
+        .swipe-indicator.show {
+            opacity: 1;
+        }
+
+        .swipe-right {
+            right: 50px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            font-size: 48px;
+        }
+
+        .swipe-left {
+            left: 50px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary);
+            font-size: 48px;
+        }
+
+        .swipe-down {
+            bottom: 200px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--warning);
+            font-size: 48px;
+        }
+
+        .swipe-up {
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--success);
+            font-size: 48px;
+        }
+
+        /* Like Animation */
+        .like-animation {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--primary);
+            font-size: 80px;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        .like-animation.show {
+            animation: likeHeart 0.6s ease-out;
+        }
+
+        @keyframes likeHeart {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+            50% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        /* Loading Screen */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--background);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .loading.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            .user-info {
+                bottom: 100px;
+                left: 15px;
+                right: 70px;
+            }
+
+            .actions {
+                right: 15px;
+                bottom: 100px;
+                gap: 15px;
+            }
+
+            .action-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+
+            .video-description {
+                font-size: 13px;
+            }
+
+            .username {
+                font-size: 15px;
+            }
+        }
+
+        /* Small Mobile */
+        @media (max-width: 480px) {
+            .top-bar {
+                height: 50px;
+                padding: 0 15px;
+            }
+
+            .logo {
+                font-size: 20px;
+            }
+
+            .user-info {
+                bottom: 80px;
+                left: 12px;
+                right: 60px;
+            }
+
+            .actions {
+                right: 12px;
+                bottom: 80px;
+                gap: 12px;
+            }
+
+            .action-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+
+            .user-avatar {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+        }
+
+        /* Desktop Optimizations */
+        @media (min-width: 1024px) {
+            .app {
+                max-width: 400px;
+                margin: 0 auto;
+                border-left: 1px solid var(--border);
+                border-right: 1px solid var(--border);
+            }
+        }
+
+        /* Smooth transitions for all interactive elements */
+        .video-container,
+        .action-btn,
+        .user-avatar,
+        .username,
+        .hashtag,
+        .search-btn {
+            will-change: transform;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+
+        /* Disable text selection */
+        .video-container,
+        .actions,
+        .top-bar {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        /* Focus styles for accessibility */
+        .action-btn:focus,
+        .user-avatar:focus,
+        .search-btn:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            :root {
+                --border: #666666;
+                --text-secondary: #ffffff;
+                --text-muted: #cccccc;
+            }
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Video counter */
+        .video-counter {
+            position: absolute;
+            top: 70px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 10;
+        }
+
+        /* Pause indicator */
+        .pause-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: white;
+            opacity: 0;
+            transition: var(--transition);
+            pointer-events: none;
+            z-index: 15;
+        }
+
+        .pause-indicator.show {
+            opacity: 1;
+        }
+    </style>
 </head>
 <body>
+    <div class="app">
+        <!-- Loading Screen -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <h2 style="margin-bottom: 10px;">Fins</h2>
+            <p style="color: var(--text-secondary);">Loading amazing videos...</p>
+        </div>
 
-<nav>
-  <div class="logo">Ultimation</div>
-  <div class="links" id="navLinks">
-    <a data-target="home">Home</a>
-    <a data-target="dashboard" style="display:none;">Dashboard</a>
-    <a data-target="admin" style="display:none;">Admin Panel</a>
-    <a href="logout.html">Logout</a>
-  </div>
-  <div class="user" id="navUser"></div>
-  <button id="settingsBtn" title="Settings ⚙️">⚙️</button>
-</nav>
+        <!-- Video Container -->
+        <div class="video-container" id="videoContainer">
+            <!-- Video Element -->
+            <video class="video" id="video" muted playsinline loop>
+                <source src="" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
 
-<div id="settingsPanel" aria-label="Settings Panel">
-  <h3>Settings</h3>
-  <label for="themeSelect">Theme</label>
-  <select id="themeSelect" aria-describedby="themeHelp">
-    <option value="dark">Dark</option>
-    <option value="light">Light</option>
-  </select>
-  <small id="themeHelp">Change color theme</small>
+            <!-- Video Overlay -->
+            <div class="video-overlay"></div>
 
-  <label for="fontSelect">Font</label>
-  <select id="fontSelect" aria-describedby="fontHelp">
-    <option value="'Inter', sans-serif">Inter (Default)</option>
-    <option value="'Roboto Mono', monospace">Roboto Mono</option>
-    <option value="'Montserrat', sans-serif">Montserrat</option>
-  </select>
-  <small id="fontHelp">Select font family</small>
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="logo">Fins</div>
+                <button class="search-btn" onclick="showSearch()">
+                    🔍
+                </button>
+            </div>
 
-  <label for="accentColor">Accent Color</label>
-  <input type="color" id="accentColor" value="#00f0ff" aria-describedby="accentHelp" />
-  <small id="accentHelp">Choose accent highlight color</small>
-</div>
+            <!-- Video Counter -->
+            <div class="video-counter" id="videoCounter">
+                1 / 10
+            </div>
 
-<main>
-  <!-- HOME -->
-  <section id="home">
-    <div class="glass-box">
-      <h1>Ultimation</h1>
-      <p>Roblox infrastructure for elite studios—real-time analytics, webhook tracking, game events, economy exports, and more.</p>
-      <button id="btnLogin">Login / Signup</button>
-      <div style="margin-top:2rem;text-align:left;">
-        <h2>Features</h2>
-        <ul>
-          <li>• Real-time player & server tracking</li>
-          <li>• Customizable Discord webhooks</li>
-          <li>• Secure API token + Lua script download</li>
-          <li>• Heartbeat & event logging</li>
-          <li>• PRC tools: ban sync, chat report, economy CSV export</li>
-          <li>• Dark/light theme and font customization</li>
-          <li>• Login throttling and secure sessions</li>
-        </ul>
-      </div>
+            <!-- User Info -->
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar" onclick="viewProfile()">
+                    🌊
+                </div>
+                <div class="username" id="username" onclick="viewProfile()">
+                    @fins_creator
+                </div>
+                <div class="video-description" id="videoDescription">
+                    Check out this amazing short video! 🎬✨ #fins #shortvideo #amazing
+                </div>
+                <div class="hashtags" id="hashtags">
+                    <span class="hashtag">#fins</span>
+                    <span class="hashtag">#shortvideo</span>
+                    <span class="hashtag">#amazing</span>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="actions">
+                <div class="action-btn" id="likeBtn" onclick="toggleLike()">
+                    <span id="likeIcon">🤍</span>
+                    <div class="count" id="likeCount">1.2K</div>
+                </div>
+                <div class="action-btn" onclick="showComments()">
+                    <span>💬</span>
+                    <div class="count">89</div>
+                </div>
+                <div class="action-btn" onclick="shareVideo()">
+                    <span>📤</span>
+                    <div class="count">45</div>
+                </div>
+                <div class="action-btn" onclick="saveVideo()">
+                    <span>🔖</span>
+                    <div class="count"></div>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <!-- Swipe Indicators -->
+            <div class="swipe-indicator swipe-right" id="swipeRight">❤️</div>
+            <div class="swipe-indicator swipe-left" id="swipeLeft">➡️</div>
+            <div class="swipe-indicator swipe-down" id="swipeDown">👤</div>
+            <div class="swipe-indicator swipe-up" id="swipeUp">⬆️</div>
+
+            <!-- Like Animation -->
+            <div class="like-animation" id="likeAnimation">❤️</div>
+
+            <!-- Pause Indicator -->
+            <div class="pause-indicator" id="pauseIndicator">⏸️</div>
+        </div>
     </div>
-  </section>
 
-  <!-- AUTH -->
-  <section id="auth" style="display:none;">
-    <div class="glass-box">
-      <h2 id="authTitle">Login</h2>
-      <input id="authEmail" type="email" placeholder="Email" autocomplete="username" />
-      <input id="authPass" type="password" placeholder="Password" autocomplete="current-password" />
-      <button id="authSubmit">Continue</button>
-      <p><span id="authSwitchText">Don't have an account?</span> 
-         <a id="authSwitch" style="color:var(--accent);cursor:pointer;">Sign up</a></p>
-    </div>
-  </section>
+    <script>
+        // Sample video data
+        const videos = [
+            {
+                id: 1,
+                url: 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4',
+                user: { username: 'fins_creator', avatar: '🌊' },
+                description: 'Amazing ocean waves! Perfect for relaxation 🌊✨',
+                hashtags: ['#ocean', '#waves', '#relaxing', '#nature'],
+                likes: 1200,
+                comments: 89,
+                shares: 45,
+                category: 'nature'
+            },
+            {
+                id: 2,
+                url: 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_2mb.mp4',
+                user: { username: 'tech_guru', avatar: '💻' },
+                description: 'Latest tech trends you need to know! 🚀',
+                hashtags: ['#tech', '#innovation', '#future', '#gadgets'],
+                likes: 2100,
+                comments: 156,
+                shares: 78,
+                category: 'tech'
+            },
+            {
+                id: 3,
+                url: 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_5mb.mp4',
+                user: { username: 'fitness_pro', avatar: '💪' },
+                description: 'Quick 30-second workout routine! 💪🔥',
+                hashtags: ['#fitness', '#workout', '#health', '#motivation'],
+                likes: 1800,
+                comments: 234,
+                shares: 167,
+                category: 'fitness'
+            }
+        ];
 
-  <!-- DASHBOARD -->
-  <section id="dashboard" style="display:none;">
-    <div class="glass-box" style="max-width:900px;">
-      <h2>Dashboard</h2>
-      <p>Hello, <span id="userEmail"></span>
-        <button id="logoutBtn" style="margin-left:12px;background:transparent;border:1px solid var(--accent);color:var(--accent);padding:8px 14px;border-radius:999px;">Logout</button>
-      </p>
-      <div style="text-align:left;margin-top:1rem;">
-        <strong>Stats:</strong><br>
-        Heartbeats: <span id="statHeartbeats">0</span> • Joins: <span id="statJoins">0</span> • Leaves: <span id="statLeaves">0</span>
-      </div>
-      <canvas id="statsChart" aria-label="User statistics chart" role="img"></canvas>
-      <hr style="margin:1rem 0;opacity:0.3;">
-      <label for="placeSelect">Select Place</label>
-      <select id="placeSelect" aria-label="Select Roblox Place">
-        <option value="" disabled selected>Select your game place</option>
-      </select>
+        // App state
+        let currentVideoIndex = 0;
+        let isPlaying = true;
+        let isLiked = false;
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchStartTime = 0;
+        let isDragging = false;
 
-      <label for="webhookUrl">Discord Webhook URL</label>
-      <input id="webhookUrl" type="url" placeholder="https://discord.com/api/webhooks/..." />
+        // DOM elements
+        const video = document.getElementById('video');
+        const videoContainer = document.getElementById('videoContainer');
+        const loading = document.getElementById('loading');
+        const progressFill = document.getElementById('progressFill');
+        const likeBtn = document.getElementById('likeBtn');
+        const likeIcon = document.getElementById('likeIcon');
+        const likeCount = document.getElementById('likeCount');
+        const likeAnimation = document.getElementById('likeAnimation');
+        const pauseIndicator = document.getElementById('pauseIndicator');
+        const videoCounter = document.getElementById('videoCounter');
 
-      <button id="regenTokenBtn" style="margin-top:10px;">Regenerate API Token</button>
-      <button id="generateLuaBtn" style="margin-top:10px;">Download Lua Tracker Script</button>
+        // Swipe indicators
+        const swipeRight = document.getElementById('swipeRight');
+        const swipeLeft = document.getElementById('swipeLeft');
+        const swipeDown = document.getElementById('swipeDown');
+        const swipeUp = document.getElementById('swipeUp');
 
-      <textarea id="luaOutput" readonly aria-label="Generated Lua tracker script" style="margin-top:15px;"></textarea>
-
-      <hr style="margin:1rem 0;opacity:0.3;">
-
-      <h3>PRC Tools</h3>
-      <label><input type="checkbox" id="banSyncToggle" /> Enable Ban Sync</label>
-      <label><input type="checkbox" id="chatReportToggle" /> Enable Chat Filter Reporting</label>
-      <button id="exportEconomy" style="margin-top:10px;">Export Economy CSV</button>
-
-    </div>
-  </section>
-
-  <!-- ADMIN PANEL -->
-  <section id="admin" style="display:none;">
-    <div class="glass-box" style="max-width:900px;">
-      <h2>Admin Panel</h2>
-      <p>Logged in as Admin: <strong>you@example.com</strong></p>
-      <button id="adminLogoutBtn" style="margin-bottom:1rem;">Logout</button>
-      <table aria-label="Users data table">
-        <thead>
-          <tr>
-            <th>Email</th>
-            <th>API Token</th>
-            <th>Heartbeats</th>
-            <th>Joins</th>
-            <th>Leaves</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="adminTable"></tbody>
-      </table>
-    </div>
-  </section>
-
-</main>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-(() => {
-  // === CONSTANTS & STORAGE KEYS ===
-  const SESSION_KEY = "ultimationSession";
-  const USER_DB_KEY = "ultimationUsers";
-  const SETTINGS_KEY = "ultimationSettings";
-  const ADMIN_EMAIL = "admin@ultimation.com";
-  const ADMIN_PASSWORD = "SuperSecureAdminPass123!";
-
-  // === DOM ===
-  const navLinks = document.querySelectorAll("nav .links a");
-  const navUser = document.getElementById("navUser");
-  const settingsBtn = document.getElementById("settingsBtn");
-  const settingsPanel = document.getElementById("settingsPanel");
-
-  // Sections
-  const sections = {
-    home: document.getElementById("home"),
-    auth: document.getElementById("auth"),
-    dashboard: document.getElementById("dashboard"),
-    admin: document.getElementById("admin"),
-  };
-
-  // AUTH DOM
-  const authTitle = document.getElementById("authTitle");
-  const authEmail = document.getElementById("authEmail");
-  const authPass = document.getElementById("authPass");
-  const authSubmit = document.getElementById("authSubmit");
-  const authSwitchText = document.getElementById("authSwitchText");
-  const authSwitch = document.getElementById("authSwitch");
-
-  // DASHBOARD DOM
-  const userEmailSpan = document.getElementById("userEmail");
-  const logoutBtn = document.getElementById("logoutBtn");
-  const statHeartbeats = document.getElementById("statHeartbeats");
-  const statJoins = document.getElementById("statJoins");
-  const statLeaves = document.getElementById("statLeaves");
-  const webhookUrlInput = document.getElementById("webhookUrl");
-  const regenTokenBtn = document.getElementById("regenTokenBtn");
-  const generateLuaBtn = document.getElementById("generateLuaBtn");
-  const luaOutput = document.getElementById("luaOutput");
-  const placeSelect = document.getElementById("placeSelect");
-  const banSyncToggle = document.getElementById("banSyncToggle");
-  const chatReportToggle = document.getElementById("chatReportToggle");
-  const exportEconomyBtn = document.getElementById("exportEconomy");
-
-  // ADMIN DOM
-  const adminTableBody = document.getElementById("adminTable");
-  const adminLogoutBtn = document.getElementById("adminLogoutBtn");
-
-  // SETTINGS DOM
-  const themeSelect = document.getElementById("themeSelect");
-  const fontSelect = document.getElementById("fontSelect");
-  const accentColorInput = document.getElementById("accentColor");
-
-  // State
-  let users = JSON.parse(localStorage.getItem(USER_DB_KEY)) || {};
-  let settings = JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {};
-  let sessionEmail = sessionStorage.getItem(SESSION_KEY);
-  let currentUser = null;
-  let loginCooldown = false;
-  let chart = null;
-  let statsChartCtx = document.getElementById("statsChart").getContext("2d");
-
-  // --- UTILITIES ---
-  function saveUsers() {
-    localStorage.setItem(USER_DB_KEY, JSON.stringify(users));
-  }
-  function saveSettings() {
-    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
-  }
-  function generateToken() {
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let token = "";
-    for(let i=0; i<40; i++) token += chars.charAt(Math.floor(Math.random()*chars.length));
-    return token;
-  }
-  function showSection(name) {
-    Object.values(sections).forEach(s => (s.style.display = "none"));
-    if (sections[name]) {
-      sections[name].style.display = "flex";
-    }
-    navLinks.forEach(link => {
-      if (link.dataset.target === name) {
-        link.style.display = (name === "dashboard" || name === "admin") && !currentUser ? "none" : "inline";
-        link.classList.add("active");
-      } else {
-        link.classList.remove("active");
-      }
-    });
-    if (name === "home") {
-      navUser.textContent = "";
-    } else if (currentUser) {
-      navUser.textContent = currentUser.email;
-    }
-  }
-  function validateEmail(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  }
-
-  // THEMES
-  function applyTheme(theme) {
-    if (theme === "light") {
-      document.documentElement.style.setProperty("--bg", "var(--bg-light)");
-      document.documentElement.style.setProperty("--fg", "var(--fg-light)");
-      document.body.style.background = "var(--bg-light)";
-      document.body.style.color = "var(--fg-light)";
-      document.body.style.transition = "background 0.4s ease, color 0.4s ease";
-      document.body.style.backgroundImage = "none";
-    } else {
-      document.documentElement.style.setProperty("--bg", "var(--bg-dark)");
-      document.documentElement.style.setProperty("--fg", "var(--fg-dark)");
-      document.body.style.background = "var(--bg-dark)";
-      document.body.style.color = "var(--fg-dark)";
-      document.body.style.transition = "background 0.4s ease, color 0.4s ease";
-      document.body.style.backgroundImage = "linear-gradient(135deg,#111c2f,#1d2c45,#103548)";
-    }
-  }
-  function applyFont(font) {
-    document.documentElement.style.setProperty("--font-main", font);
-  }
-  function applyAccent(color) {
-    document.documentElement.style.setProperty("--accent", color);
-  }
-  function loadSettings() {
-    if (!settings.theme) settings.theme = "dark";
-    if (!settings.font) settings.font = "'Inter', sans-serif";
-    if (!settings.accent) settings.accent = "#00f0ff";
-
-    themeSelect.value = settings.theme;
-    fontSelect.value = settings.font;
-    accentColorInput.value = settings.accent;
-
-    applyTheme(settings.theme);
-    applyFont(settings.font);
-    applyAccent(settings.accent);
-  }
-  themeSelect.onchange = () => {
-    settings.theme = themeSelect.value;
-    saveSettings();
-    applyTheme(settings.theme);
-  };
-  fontSelect.onchange = () => {
-    settings.font = fontSelect.value;
-    saveSettings();
-    applyFont(settings.font);
-  };
-  accentColorInput.oninput = () => {
-    settings.accent = accentColorInput.value;
-    saveSettings();
-    applyAccent(settings.accent);
-  };
-
-  // SETTINGS TOGGLE
-  settingsBtn.onclick = () => {
-    settingsPanel.style.display = settingsPanel.style.display === "block" ? "none" : "block";
-  };
-
-  // --- AUTH LOGIC ---
-  let isLogin = true; // login mode by default
-  function switchAuthMode() {
-    isLogin = !isLogin;
-    authTitle.textContent = isLogin ? "Login" : "Sign Up";
-    authSwitchText.textContent = isLogin ? "Don't have an account?" : "Already have an account?";
-    authSwitch.textContent = isLogin ? "Sign up" : "Login";
-    authEmail.value = "";
-    authPass.value = "";
-  }
-  authSwitch.onclick = switchAuthMode;
-
-  // Throttling for login
-  function canAttemptLogin() {
-    if (loginCooldown) {
-      alert("Please wait a few seconds before trying again.");
-      return false;
-    }
-    loginCooldown = true;
-    setTimeout(() => loginCooldown = false, 4000); // 4 seconds cooldown
-    return true;
-  }
-
-  authSubmit.onclick = () => {
-    const email = authEmail.value.trim().toLowerCase();
-    const pass = authPass.value;
-
-    if (!validateEmail(email)) {
-      alert("Please enter a valid email.");
-      return;
-    }
-    if (pass.length < 6) {
-      alert("Password must be at least 6 characters.");
-      return;
-    }
-    if (!canAttemptLogin()) return;
-
-    if (isLogin) {
-      // LOGIN
-      if (email === ADMIN_EMAIL && pass === ADMIN_PASSWORD) {
-        currentUser = { email: ADMIN_EMAIL, admin: true };
-        sessionStorage.setItem(SESSION_KEY, ADMIN_EMAIL);
-        navLinks.forEach(link => {
-          if(link.dataset.target==="admin") link.style.display = "inline";
-          if(link.dataset.target==="dashboard") link.style.display = "inline";
-        });
-        showSection("admin");
-        loadAdminPanel();
-        return;
-      }
-      if (!users[email]) {
-        alert("No account found with that email.");
-        return;
-      }
-      if (users[email].password !== pass) {
-        alert("Incorrect password.");
-        return;
-      }
-      currentUser = users[email];
-      sessionStorage.setItem(SESSION_KEY, email);
-      navLinks.forEach(link => {
-        if(link.dataset.target==="dashboard") link.style.display = "inline";
-      });
-      showSection("dashboard");
-      loadDashboard();
-    } else {
-      // SIGNUP
-      if (users[email]) {
-        alert("Account already exists with that email.");
-        return;
-      }
-      const newUser = {
-        email: email,
-        password: pass,
-        apiToken: generateToken(),
-        heartbeats: 0,
-        joins: 0,
-        leaves: 0,
-        webhook: "",
-        banSync: false,
-        chatReport: false,
-        economyData: [],
-      };
-      users[email] = newUser;
-      saveUsers();
-      alert("Account created! Please log in.");
-      switchAuthMode();
-    }
-  };
-
-  // --- DASHBOARD LOGIC ---
-  function loadDashboard() {
-    userEmailSpan.textContent = currentUser.email;
-    webhookUrlInput.value = currentUser.webhook || "";
-    statHeartbeats.textContent = currentUser.heartbeats || 0;
-    statJoins.textContent = currentUser.joins || 0;
-    statLeaves.textContent = currentUser.leaves || 0;
-    banSyncToggle.checked = !!currentUser.banSync;
-    chatReportToggle.checked = !!currentUser.chatReport;
-
-    // Fill place selector with sample data (replace with real Roblox API calls if possible)
-    placeSelect.innerHTML = `
-      <option value="" disabled>Select your Roblox Place</option>
-      <option value="123456">Super Cool Game - Place 123456</option>
-      <option value="654321">Mega Battle Arena - Place 654321</option>
-      <option value="987654">Adventure Quest - Place 987654</option>
-    `;
-    placeSelect.value = currentUser.placeId || "";
-
-    placeSelect.onchange = () => {
-      currentUser.placeId = placeSelect.value;
-      saveUsers();
-    };
-
-    webhookUrlInput.onchange = () => {
-      currentUser.webhook = webhookUrlInput.value.trim();
-      saveUsers();
-    };
-
-    banSyncToggle.onchange = () => {
-      currentUser.banSync = banSyncToggle.checked;
-      saveUsers();
-    };
-
-    chatReportToggle.onchange = () => {
-      currentUser.chatReport = chatReportToggle.checked;
-      saveUsers();
-    };
-
-    exportEconomyBtn.onclick = () => {
-      if (!currentUser.economyData || currentUser.economyData.length === 0) {
-        alert("No economy data to export.");
-        return;
-      }
-      const csvHeader = "Player,Amount,Timestamp\n";
-      const csvRows = currentUser.economyData.map(e => `${e.player},${e.amount},${e.timestamp}`).join("\n");
-      const csvContent = csvHeader + csvRows;
-      const blob = new Blob([csvContent], {type: "text/csv"});
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = "economy_export.csv";
-      a.click();
-    };
-
-    regenTokenBtn.onclick = () => {
-      currentUser.apiToken = generateToken();
-      alert("New API token generated! Remember to download the updated Lua script.");
-      saveUsers();
-      updateLuaScript();
-    };
-
-    generateLuaBtn.onclick = () => {
-      updateLuaScript();
-      downloadLua();
-    };
-
-    logoutBtn.onclick = () => {
-      sessionStorage.removeItem(SESSION_KEY);
-      currentUser = null;
-      showSection("home");
-      navLinks.forEach(link => {
-        if(link.dataset.target==="dashboard" || link.dataset.target==="admin") link.style.display = "none";
-      });
-      navUser.textContent = "";
-    };
-
-    // Setup initial lua script in textarea
-    updateLuaScript();
-
-    // Setup ChartJS stats chart
-    setupStatsChart();
-
-  }
-
-  function updateLuaScript() {
-    if (!currentUser) return;
-    const token = currentUser.apiToken;
-    const webhook = currentUser.webhook || "";
-    const placeId = currentUser.placeId || "123456"; // fallback
-
-    const banSync = currentUser.banSync ? "true" : "false";
-    const chatReport = currentUser.chatReport ? "true" : "false";
-
-    // Lua tracker script with real webhook & API token integration + PRC toggles
-    const luaScript = `-- Ultimation Tracker for Roblox
-local HttpService = game:GetService("HttpService")
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-
-local API_TOKEN = "${token}"
-local WEBHOOK_URL = "${webhook}"
-
-local banSyncEnabled = ${banSync}
-local chatReportEnabled = ${chatReport}
-
-local function sendEvent(eventType, playerName, extraData)
-    local payload = {
-        apiToken = API_TOKEN,
-        eventType = eventType,
-        player = playerName or "",
-        extra = extraData or "",
-        placeId = ${placeId},
-        timestamp = os.time()
-    }
-    local jsonData = HttpService:JSONEncode(payload)
-
-    -- Send to backend API or webhook
-    if WEBHOOK_URL ~= "" then
-        -- Discord webhook fallback
-        local success, err = pcall(function()
-            HttpService:PostAsync(WEBHOOK_URL, HttpService:JSONEncode({
-                content = "**[Ultimation]** Event: "..eventType..", Player: "..(playerName or "N/A")
-            }), Enum.HttpContentType.ApplicationJson)
-        end)
-        if not success then warn("Webhook send failed:", err) end
-    end
-
-    -- Replace this with your real backend URL POST if available
-    -- local success2, err2 = pcall(function()
-    --     HttpService:PostAsync("https://your-backend.com/track", jsonData, Enum.HttpContentType.ApplicationJson)
-    -- end)
-end
-
-Players.PlayerAdded:Connect(function(plr)
-    sendEvent("PlayerAdded", plr.Name)
-    if banSyncEnabled then
-        -- Example ban check, replace with real
-        -- print("Checking bans for "..plr.Name)
-    end
-end)
-
-Players.PlayerRemoving:Connect(function(plr)
-    sendEvent("PlayerRemoving", plr.Name)
-end)
-
-RunService.Heartbeat:Connect(function()
-    sendEvent("heartbeat")
-end)
-
-if chatReportEnabled then
-    game:GetService("Players").PlayerAdded:Connect(function(plr)
-        plr.Chatted:Connect(function(msg)
-            sendEvent("chatMessage", plr.Name, msg)
-        end)
-    end)
-end
-`;
-
-    luaOutput.value = luaScript;
-  }
-
-  function downloadLua() {
-    const luaText = luaOutput.value;
-    const blob = new Blob([luaText], { type: "text/plain" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "UltimationTracker.lua";
-    a.click();
-  }
-
-  // ChartJS Stats
-  function setupStatsChart() {
-    if (chart) chart.destroy();
-
-    const data = {
-      labels: ["Heartbeats", "Joins", "Leaves"],
-      datasets: [{
-        label: 'Stats',
-        data: [
-          currentUser.heartbeats || 0,
-          currentUser.joins || 0,
-          currentUser.leaves || 0
-        ],
-        backgroundColor: [
-          'rgba(0, 240, 255, 0.7)',
-          'rgba(0, 200, 150, 0.7)',
-          'rgba(255, 80, 80, 0.7)'
-        ],
-        borderColor: [
-          'rgba(0, 240, 255, 1)',
-          'rgba(0, 200, 150, 1)',
-          'rgba(255, 80, 80, 1)'
-        ],
-        borderWidth: 1
-      }]
-    };
-
-    chart = new Chart(statsChartCtx, {
-      type: 'bar',
-      data: data,
-      options: {
-        scales: {
-          y: { beginAtZero: true, ticks: { stepSize: 1 } }
-        },
-        plugins: {
-          legend: { display: false }
-        },
-        animation: {
-          duration: 600
+        // Initialize app
+        function init() {
+            setTimeout(() => {
+                loading.classList.add('hidden');
+                loadVideo(0);
+                setupEventListeners();
+            }, 2000);
         }
-      }
-    });
-  }
 
-  // --- ADMIN PANEL ---
-  function loadAdminPanel() {
-    if (!currentUser || !currentUser.admin) return;
-    adminTableBody.innerHTML = "";
-    Object.values(users).forEach(u => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${u.email}</td>
-        <td style="font-family: monospace;">${u.apiToken}</td>
-        <td>${u.heartbeats || 0}</td>
-        <td>${u.joins || 0}</td>
-        <td>${u.leaves || 0}</td>
-        <td><button data-email="${u.email}" class="delUserBtn">Delete</button></td>
-      `;
-      adminTableBody.appendChild(tr);
-    });
-
-    document.querySelectorAll(".delUserBtn").forEach(btn => {
-      btn.onclick = (e) => {
-        const em = e.target.dataset.email;
-        if (confirm(`Delete user ${em}? This cannot be undone.`)) {
-          delete users[em];
-          saveUsers();
-          loadAdminPanel();
+        // Load video
+        function loadVideo(index) {
+            if (index < 0 || index >= videos.length) return;
+            
+            currentVideoIndex = index;
+            const videoData = videos[index];
+            
+            // Update video counter
+            videoCounter.textContent = `${index + 1} / ${videos.length}`;
+            
+            // Update user info
+            document.getElementById('userAvatar').textContent = videoData.user.avatar;
+            document.getElementById('username').textContent = `@${videoData.user.username}`;
+            document.getElementById('videoDescription').textContent = videoData.description;
+            
+            // Update hashtags
+            const hashtagsContainer = document.getElementById('hashtags');
+            hashtagsContainer.innerHTML = videoData.hashtags.map(tag => 
+                `<span class="hashtag">${tag}</span>`
+            ).join('');
+            
+            // Update stats
+            document.getElementById('likeCount').textContent = formatNumber(videoData.likes);
+            
+            // Load video
+            video.src = videoData.url;
+            video.load();
+            
+            // Reset like state
+            isLiked = false;
+            updateLikeButton();
         }
-      };
-    });
 
-    adminLogoutBtn.onclick = () => {
-      sessionStorage.removeItem(SESSION_KEY);
-      currentUser = null;
-      showSection("home");
-      navLinks.forEach(link => {
-        if(link.dataset.target==="dashboard" || link.dataset.target==="admin") link.style.display = "none";
-      });
-      navUser.textContent = "";
-    };
-  }
+        // Setup event listeners
+        function setupEventListeners() {
+            // Video events
+            video.addEventListener('loadeddata', () => {
+                if (isPlaying) video.play();
+            });
+            
+            video.addEventListener('timeupdate', updateProgress);
+            video.addEventListener('ended', nextVideo);
 
-  // --- NAVIGATION ---
-  navLinks.forEach(link => {
-    link.onclick = () => {
-      if(link.dataset.target === "dashboard" && !currentUser) {
-        alert("Please login first.");
-        showSection("auth");
-        return;
-      }
-      if(link.dataset.target === "admin" && (!currentUser || !currentUser.admin)) {
-        alert("Admin only.");
-        showSection("home");
-        return;
-      }
-      showSection(link.dataset.target);
-    };
-  });
+            // Touch events for mobile
+            videoContainer.addEventListener('touchstart', handleTouchStart, { passive: false });
+            videoContainer.addEventListener('touchmove', handleTouchMove, { passive: false });
+            videoContainer.addEventListener('touchend', handleTouchEnd, { passive: false });
 
-  // --- INIT ---
-  function init() {
-    loadSettings();
+            // Mouse events for desktop
+            videoContainer.addEventListener('mousedown', handleMouseDown);
+            videoContainer.addEventListener('mousemove', handleMouseMove);
+            videoContainer.addEventListener('mouseup', handleMouseUp);
+            videoContainer.addEventListener('click', handleClick);
 
-    if (sessionEmail) {
-      if (sessionEmail === ADMIN_EMAIL) {
-        currentUser = { email: ADMIN_EMAIL, admin: true };
-        navLinks.forEach(link => {
-          if(link.dataset.target==="admin") link.style.display = "inline";
-          if(link.dataset.target==="dashboard") link.style.display = "inline";
-        });
-        showSection("admin");
-        loadAdminPanel();
-      } else if (users[sessionEmail]) {
-        currentUser = users[sessionEmail];
-        navLinks.forEach(link => {
-          if(link.dataset.target==="dashboard") link.style.display = "inline";
-        });
-        showSection("dashboard");
-        loadDashboard();
-      } else {
-        sessionStorage.removeItem(SESSION_KEY);
-        showSection("home");
-      }
-    } else {
-      showSection("home");
-    }
-  }
+            // Keyboard events
+            document.addEventListener('keydown', handleKeydown);
 
-  // Auto logout on tab close or refresh
-  window.addEventListener("beforeunload", () => {
-    sessionStorage.removeItem(SESSION_KEY);
-  });
+            // Prevent context menu
+            videoContainer.addEventListener('contextmenu', e => e.preventDefault());
+        }
 
-  // Login button on homepage
-  document.getElementById("btnLogin").onclick = () => {
-    showSection("auth");
-  };
+        // Touch handling
+        function handleTouchStart(e) {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+            touchStartTime = Date.now();
+            isDragging = false;
+        }
 
-  init();
-})();
-</script>
+        function handleTouchMove(e) {
+            e.preventDefault();
+            if (!isDragging) {
+                const deltaX = Math.abs(e.touches[0].clientX - touchStartX);
+                const deltaY = Math.abs(e.touches[0].clientY - touchStartY);
+                
+                if (deltaX > 10 || deltaY > 10) {
+                    isDragging = true;
+                    showSwipeIndicator(e.touches[0].clientX - touchStartX, e.touches[0].clientY - touchStartY);
+                }
+            }
+        }
 
+        function handleTouchEnd(e) {
+            const deltaX = e.changedTouches[0].clientX - touchStartX;
+            const deltaY = e.changedTouches[0].clientY - touchStartY;
+            const deltaTime = Date.now() - touchStartTime;
+            
+            hideAllSwipeIndicators();
+
+            if (!isDragging && deltaTime < 300) {
+                // Single tap
+                togglePlayPause();
+                return;
+            }
+
+            if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                // Horizontal swipe
+                if (Math.abs(deltaX) > 50) {
+                    if (deltaX > 0) {
+                        // Swipe right - Like
+                        handleSwipeRight();
+                    } else {
+                        // Swipe left - Next video
+                        handleSwipeLeft();
+                    }
+                }
+            } else {
+                // Vertical swipe
+                if (Math.abs(deltaY) > 50) {
+                    if (deltaY > 0) {
+                        // Swipe down - View profile
+                        handleSwipeDown();
+                    } else {
+                        // Swipe up - Previous video
+                        handleSwipeUp();
+                    }
+                }
+            }
+        }
+
+        // Mouse handling for desktop
+        function handleMouseDown(e) {
+            touchStartX = e.clientX;
+            touchStartY = e.clientY;
+            touchStartTime = Date.now();
+            isDragging = false;
+        }
+
+        function handleMouseMove(e) {
+            if (e.buttons === 1) { // Left mouse button pressed
+                if (!isDragging) {
+                    const deltaX = Math.abs(e.clientX - touchStartX);
+                    const deltaY = Math.abs(e.clientY - touchStartY);
+                    
+                    if (deltaX > 10 || deltaY > 10) {
+                        isDragging = true;
+                        showSwipeIndicator(e.clientX - touchStartX, e.clientY - touchStartY);
+                    }
+                }
+            }
+        }
+
+        function handleMouseUp(e) {
+            const deltaX = e.clientX - touchStartX;
+            const deltaY = e.clientY - touchStartY;
+            
+            hideAllSwipeIndicators();
+
+            if (!isDragging) return;
+
+            if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                if (Math.abs(deltaX) > 50) {
+                    if (deltaX > 0) {
+                        handleSwipeRight();
+                    } else {
+                        handleSwipeLeft();
+                    }
+                }
+            } else {
+                if (Math.abs(deltaY) > 50) {
+                    if (deltaY > 0) {
+                        handleSwipeDown();
+                    } else {
+                        handleSwipeUp();
+                    }
+                }
+            }
+        }
+
+        function handleClick(e) {
+            if (!isDragging && Date.now() - touchStartTime < 300) {
+                togglePlayPause();
+            }
+        }
+
+        // Keyboard controls
+        function handleKeydown(e) {
+            switch(e.key) {
+                case ' ':
+                    e.preventDefault();
+                    togglePlayPause();
+                    break;
+                case 'ArrowRight':
+                    handleSwipeRight();
+                    break;
+                case 'ArrowLeft':
+                    handleSwipeLeft();
+                    break;
+                case 'ArrowUp':
+                    handleSwipeUp();
+                    break;
+                case 'ArrowDown':
+                    handleSwipeDown();
+                    break;
+                case 'l':
+                    toggleLike();
+                    break;
+            }
+        }
+
+        // Swipe actions
+        function handleSwipeRight() {
+            toggleLike();
+            showSwipeIndicator(100, 0);
+            setTimeout(hideAllSwipeIndicators, 500);
+        }
+
+        function handleSwipeLeft() {
+            nextVideo();
+            showSwipeIndicator(-100, 0);
+            setTimeout(hideAllSwipeIndicators, 500);
+        }
+
+        function handleSwipeDown() {
+            viewProfile();
+            showSwipeIndicator(0, 100);
+            setTimeout(hideAllSwipeIndicators, 500);
+        }
+
+        function handleSwipeUp() {
+            previousVideo();
+            showSwipeIndicator(0, -100);
+            setTimeout(hideAllSwipeIndicators, 500);
+        }
+
+        // Show swipe indicators
+        function showSwipeIndicator(deltaX, deltaY) {
+            hideAllSwipeIndicators();
+            
+            if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                if (deltaX > 30) {
+                    swipeRight.classList.add('show');
+                } else if (deltaX < -30) {
+                    swipeLeft.classList.add('show');
+                }
+            } else {
+                if (deltaY > 30) {
+                    swipeDown.classList.add('show');
+                } else if (deltaY < -30) {
+                    swipeUp.classList.add('show');
+                }
+            }
+        }
+
+        function hideAllSwipeIndicators() {
+            [swipeRight, swipeLeft, swipeDown, swipeUp].forEach(indicator => {
+                indicator.classList.remove('show');
+            });
+        }
+
+        // Video controls
+        function togglePlayPause() {
+            if (isPlaying) {
+                video.pause();
+                pauseIndicator.classList.add('show');
+                setTimeout(() => pauseIndicator.classList.remove('show'), 1000);
+            } else {
+                video.play();
+            }
+            isPlaying = !isPlaying;
+        }
+
+        function nextVideo() {
+            const nextIndex = (currentVideoIndex + 1) % videos.length;
+            loadVideo(nextIndex);
+        }
+
+        function previousVideo() {
+            const prevIndex = currentVideoIndex === 0 ? videos.length - 1 : currentVideoIndex - 1;
+            loadVideo(prevIndex);
+        }
+
+        function updateProgress() {
+            const progress = (video.currentTime / video.duration) * 100;
+            progressFill.style.width = `${progress}%`;
+        }
+
+        // Action functions
+        function toggleLike() {
+            isLiked = !isLiked;
+            updateLikeButton();
+            showLikeAnimation();
+            
+            // Update like count
+            const currentLikes = videos[currentVideoIndex].likes;
+            videos[currentVideoIndex].likes = isLiked ? currentLikes + 1 : currentLikes - 1;
+            likeCount.textContent = formatNumber(videos[currentVideoIndex].likes);
+        }
+
+        function updateLikeButton() {
+            if (isLiked) {
+                likeIcon.textContent = '❤️';
+                likeBtn.classList.add('active');
+            } else {
+                likeIcon.textContent = '🤍';
+                likeBtn.classList.remove('active');
+            }
+        }
+
+        function showLikeAnimation() {
+            likeAnimation.classList.add('show');
+            setTimeout(() => likeAnimation.classList.remove('show'), 600);
+        }
+
+        function viewProfile() {
+            alert(`Viewing profile: ${videos[currentVideoIndex].user.username}`);
+        }
+
+        function showComments() {
+            alert('Comments feature coming soon!');
+        }
+
+        function shareVideo() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Check out this video on Fins!',
+                    url: window.location.href
+                });
+            } else {
+                alert('Share feature activated!');
+            }
+        }
+
+        function saveVideo() {
+            alert('Video saved to your favorites!');
+        }
+
+        function showSearch() {
+            alert('Search feature coming soon!');
+        }
+
+        // Utility functions
+        function formatNumber(num) {
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            } else if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            }
+            return num.toString();
+        }
+
+        // Initialize the app
+        window.addEventListener('load', init);
+
+        // Prevent zoom on double tap
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function (event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+
+        // Service worker for offline support
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(console.error);
+        }
+
+        // Add visual feedback for interactions
+        function addRipple(element, x, y) {
+            const ripple = document.createElement('div');
+            ripple.style.position = 'absolute';
+            ripple.style.borderRadius = '50%';
+            ripple.style.background = 'rgba(255, 255, 255, 0.3)';
+            ripple.style.transform = 'scale(0)';
+            ripple.style.animation = 'ripple 0.6s linear';
+            ripple.style.left = (x - element.offsetLeft - 25) + 'px';
+            ripple.style.top = (y - element.offsetTop - 25) + 'px';
+            ripple.style.width = '50px';
+            ripple.style.height = '50px';
+            element.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        }
+
+        // Add ripple animation CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
 </body>
 </html>
